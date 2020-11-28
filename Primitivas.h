@@ -35,7 +35,7 @@ typedef struct
     char nombre[30];
     char tipo[30];
     int longitud;
-    char valor[30];
+    char valor[50];
 } QueueItem;
 
 typedef struct s_nodo

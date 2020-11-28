@@ -70,7 +70,7 @@
   s:
     prog {
       printf("\tREGLA 0: {prog} es s\n");
-      // generarASM(lista, &colaSimbolos);
+      generarASM(lista, &colaSimbolos);
     };
 
   prog:
@@ -117,7 +117,7 @@
       auxPos = insertarTerceto(lista, "CMP", $3, "1");
       formatearPosicion(auxPos + 4, auxPosStr);
       insertarTerceto(lista, "BGE", auxPosStr, "");
-      strcpy(error, "El valor debe ser >=1");
+      strcpy(error, "\"El valor debe ser >=1\"");
       insertarTerceto(lista, "WRITE", error, "");
       insertarTerceto(lista, "JMP", "fin", "");
 
@@ -133,7 +133,7 @@
       auxPos = insertarTerceto(lista, "CMP", $3, "@cantElementos");
       formatearPosicion(auxPos + 4, auxPosStr);
       insertarTerceto(lista, "BLE", auxPosStr, "");
-      strcpy(error, "La lista tiene menos elementos que el indicado");
+      strcpy(error, "\"La lista tiene menos elementos que el indicado\"");
       insertarTerceto(lista, "WRITE", error, "");
       insertarTerceto(lista, "JMP", "fin", "");
 

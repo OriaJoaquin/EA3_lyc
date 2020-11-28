@@ -5,7 +5,6 @@
 #ifndef __ASSEMBLER_H__
 #define __ASSEMBLER_H__
 
-#include "expression.h"
 #include "Primitivas.h"
 #include <stdlib.h>
 #include <string.h>
@@ -16,9 +15,8 @@ void crearArchivo(FILE **);
 void escribirCabecera(FILE *);
 void escribirCabeceraCodeInit(FILE *);
 void escribirVariables(FILE *, t_cola *);
-void escribirCodigo(FILE *, SExpression *);
+void escribirCodigo(FILE *, t_listaTercetos *);
 void escribirFinal(FILE *);
-void pasarSimboloADecimal(QueueItem *);
 //void imprimirArbolInOrden(SExpression *ast);
 
 extern int contadorAux;
