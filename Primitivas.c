@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 int posicionTerceto = 0;
+int contadorCadena = 0;
 
 //////////////////////////////////////////////////////////////////////////////////
 ///PRIMITIVAS
@@ -68,6 +69,90 @@ void vaciarPila(t_pila *pp)
     }
 }
 
+////////////////////////////////////////////////////////////
+//Funciones cola
+void crearCola(t_cola *pc)
+{
+    pc->pri = NULL;
+    pc->ult = NULL;
+}
+
+int acolar(t_cola *pc, const QueueItem *pd)
+{
+    t_nodo *nue = (t_nodo *)malloc(sizeof(t_nodo));
+
+    if (!nue)
+        return 0;
+
+    nue->dato = *pd;
+    nue->sig = NULL;
+
+    if (!pc->pri)
+        pc->pri = nue;
+    else
+        pc->ult->sig = nue;
+
+    pc->ult = nue;
+
+    return 1;
+}
+
+int desacolar(t_cola *pc, QueueItem *pd)
+{
+    t_nodo *aux;
+
+    if (!pc->pri)
+        return 0;
+
+    aux = pc->pri;
+    *pd = aux->dato;
+    pc->pri = aux->sig;
+
+    if (!aux->sig)
+        pc->ult = NULL;
+
+    free(aux);
+
+    return 1;
+}
+
+int colaLlena(const t_cola *pc)
+{
+    void *aux = malloc(sizeof(QueueItem));
+
+    free(aux);
+
+    return aux == NULL;
+}
+
+int colaVacia(const t_cola *pc)
+{
+    return pc->pri == NULL;
+}
+
+int verPrimero(const t_cola *pc, QueueItem *pd)
+{
+    if (!pc->pri)
+        return 0;
+
+    *pd = pc->pri->dato;
+    return 1;
+}
+void vaciarCola(t_cola *pc)
+{
+    t_nodo *aux;
+
+    while (!pc->pri)
+    {
+        aux = pc->pri;
+        pc->pri = aux->sig;
+        free(aux);
+    }
+
+    if (!pc->pri)
+        pc->ult = NULL;
+}
+
 //FUNCIONES LISTA
 void crearListaTercetos(t_listaTercetos *pTerceto)
 {
@@ -112,13 +197,50 @@ void imprimirListaTercetos(t_listaTercetos *pTerceto)
     }
 }
 
-void formatearPosicion(char *posStr)
+void formatearPosicion(int pos, char *posStr)
 {
     char aux[30];
+    itoa(pos, posStr, 10);
     aux[0] = '\0';
     strcat(aux, "[");
     strcat(aux, posStr);
     strcat(aux, "]");
 
     strcpy(posStr, aux);
+}
+
+void cargarItemSimboloEntero(QueueItem *item, char *value)
+{
+    char cadenaAuxiliar[33];
+
+    sprintf(cadenaAuxiliar, "_%s", value);
+
+    strcpy(item->nombre, cadenaAuxiliar);
+    strcpy(item->tipo, "Entero");
+    strcpy(item->valor, value);
+
+    item->longitud = 0;
+}
+
+void cargarItemSimboloCadena(QueueItem *item, char *value)
+{
+    char cadenaAuxiliar[33];
+
+    item->longitud = strlen(value);
+
+    sprintf(cadenaAuxiliar, "_cad%d", contadorCadena);
+    strcpy(item->nombre, cadenaAuxiliar);
+    strcpy(item->tipo, "cadena");
+    strcpy(item->valor, value);
+
+    contadorCadena++;
+}
+
+void cargarItemSimboloVariableConValor(QueueItem *item, char *nombre, char *value, char *tipo)
+{
+    item->longitud = 0;
+
+    strcpy(item->nombre, nombre);
+    strcpy(item->tipo, tipo);
+    strcpy(item->valor, value);
 }

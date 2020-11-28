@@ -1,1 +1,3 @@
-resul=cola(id5;[10,20,30,40,5,4])
+READ id5
+resul = cola(id5;[10,20,30,40,5,4])
+WRITE resul

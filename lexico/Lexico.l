@@ -24,12 +24,12 @@ COMA      ","
 PYC       ";"
 ASIG      "="
 
+WRITE    "WRITE"
+READ    "READ"
+COLA    "cola"
+
 CONSENT   [-]?[0-9]+
 CONSCAD   ["].{1,30}["]
-
-WRITE    "write"
-READ    "read"
-COLA    "cola"
 
 PARA      "("
 PARC      ")"

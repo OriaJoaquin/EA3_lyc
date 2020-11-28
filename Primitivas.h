@@ -29,6 +29,26 @@ typedef struct s_nodo_pila
 } t_nodo_pila;
 
 typedef t_nodo_pila *t_pila;
+// ESTRUCTURA DE COLA
+typedef struct
+{
+    char nombre[30];
+    char tipo[30];
+    int longitud;
+    char valor[30];
+} QueueItem;
+
+typedef struct s_nodo
+{
+    QueueItem dato;
+    struct s_nodo *sig;
+} t_nodo;
+
+typedef struct
+{
+    t_nodo *pri;
+    t_nodo *ult;
+} t_cola;
 
 //DEFINICIONES FUNCIONES PILA
 void crearPila(t_pila *);
@@ -45,6 +65,19 @@ void crearListaTercetos(t_listaTercetos *);
 int insertarTerceto(t_listaTercetos *, char *, char *, char *);
 void imprimirListaTercetos(t_listaTercetos *);
 
-void formatearPosicion(char *);
+//DEFINICIONES FUNCIONES COLA
+void crearCola(t_cola *);
+int acolar(t_cola *, const QueueItem *);
+int desacolar(t_cola *, QueueItem *);
+int colaLlena(const t_cola *);
+int colaVacia(const t_cola *);
+int verPrimero(const t_cola *, QueueItem *);
+void vaciarCola(t_cola *);
+void cargarItemSimboloEntero(QueueItem *, char *);
+void cargarItemSimboloCadena(QueueItem *, char *);
+void cargarItemSimboloVariableConValor(QueueItem *, char *, char *, char *);
+
+void formatearPosicion(int, char *);
 
 extern int posicionTerceto;
+extern int contadorCadena;
