@@ -3,6 +3,7 @@
   #include "expression.h"
   #include <stdio.h>
   #include <stdlib.h>
+  #include <string.h>
   #include "y.tab.h"
 
   FILE *yyin; // funcion que hace el analisis.
@@ -39,17 +40,59 @@ CORCC     "]"
 %%
 
 
-{WRITE}     {printf("WRITE: %s\n", yytext); return WRITE;}
-{READ}     {printf("READ: %s\n", yytext); return READ;}
-{COLA}     {printf("COLA: %s\n", yytext); return COLA;}
+{WRITE}     {
+              yylval.value = strdup(yytext);
+              printf("WRITE: %s\n", yytext);
+              return WRITE;
+            }
 
-{ID}      {printf("ID: %s\n", yytext); return ID;}
-{COMA}      {printf("COMA: %s\n", yytext); return COMA;}
-{PYC}     {printf("PYC: %s\n", yytext); return PYC;}
-{ASIG}     {printf("ASIG: %s\n", yytext); return ASIG;}
+{READ}      {
+              yylval.value = strdup(yytext);
+              printf("READ: %s\n", yytext);
+              return READ;
+            }
 
-{CONSENT}     {printf("CONSENT: %s\n", yytext); return CONSENT;}
-{CONSCAD}     {printf("CONSCAD: %s\n", yytext); return CONSCAD;}
+{COLA}      {
+              yylval.value = strdup(yytext);
+              printf("COLA: %s\n", yytext);
+              return COLA;
+            }
+
+{ID}        {
+              yylval.value = strdup(yytext);
+              printf("ID: %s\n", yytext); 
+              return ID;
+            }
+
+{COMA}      {
+              yylval.value = strdup(yytext);
+              printf("COMA: %s\n", yytext); 
+              return COMA;
+            }
+
+{PYC}       {
+              yylval.value = strdup(yytext);
+              printf("PYC: %s\n", yytext);
+              return PYC;
+            }
+
+{ASIG}      {
+              yylval.value = strdup(yytext);
+              printf("ASIG: %s\n", yytext); 
+              return ASIG;
+            }
+
+{CONSENT}   {
+              yylval.value = strdup(yytext);
+              printf("CONSENT: %s\n", yytext);
+              return CONSENT;
+            }
+
+{CONSCAD}   {
+              yylval.value = strdup(yytext);
+              printf("CONSCAD: %s\n", yytext); 
+              return CONSCAD;
+            }
 
 {PARA}      {printf("PARA: %s\n", yytext); return PARA;}
 {PARC}      {printf("PARC: %s\n", yytext); return PARC;}

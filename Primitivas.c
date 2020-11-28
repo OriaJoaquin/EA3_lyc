@@ -121,5 +121,4 @@ void formatearPosicion(char *posStr)
     strcat(aux, "]");
 
     strcpy(posStr, aux);
-    printf("%s\n", aux);
 }

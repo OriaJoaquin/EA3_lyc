@@ -1,9 +1,9 @@
 //ESTRUCTURA DE LISTA
 typedef struct
 {
-    char pos1[30];
-    char pos2[30];
-    char pos3[30];
+    char pos1[60];
+    char pos2[60];
+    char pos3[60];
     int posicion;
 } t_info;
 
