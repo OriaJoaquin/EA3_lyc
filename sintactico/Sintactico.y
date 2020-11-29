@@ -30,7 +30,6 @@
   int yylex();
 %}
 
-%parse-param { SExpression **expression }
 %parse-param { t_listaTercetos *lista }
 
 %token LETRA
@@ -290,8 +289,7 @@ int main(int argc, char *argv[])
     crearPila(&pilaPosiciones);
     crearListaTercetos(&lista);
 
-    SExpression *expression;
-    yyparse(&expression, &lista);
+    yyparse(&lista);
 
     printf("\n\nCANTIDAD ELEMENTOS: %d", cantElementos);
 
