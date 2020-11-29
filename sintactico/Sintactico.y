@@ -211,15 +211,18 @@
         auxPos = insertarTerceto(lista, "CMP", "@cont", "@cantSaltos");
         formatearPosicion(auxPos + 4, auxPosStr);
         insertarTerceto(lista, "BLT", auxPosStr, "");
+
         //Apilo posicion para la etiqueta
         strcpy(itemPosicion.value, auxPosStr);
         meterEnPila(&pilaPosiciones, &itemPosicion);
+
         auxPos = insertarTerceto(lista, "+", "@acum", itemSimbolo.nombre);
         formatearPosicion(auxPos, auxPosStr);
         insertarTerceto(lista, "=", "@acum", auxPosStr);
-        //Desapilo posicion
+        
+        //Desapilo posicion para la etiqueta
         sacarDePila(&pilaPosiciones, &itemPosicion);
-        printf("POSICION: %s\n", itemPosicion.value);
+        
         insertarTerceto(lista, "ETIQ", itemPosicion.value, "");
         auxPos = insertarTerceto(lista, "+", "@cont", "_1");
         formatearPosicion(auxPos, auxPosStr);
@@ -237,15 +240,18 @@
         auxPos = insertarTerceto(lista, "CMP", "@cont", "@cantSaltos");
         formatearPosicion(auxPos + 4, auxPosStr);
         insertarTerceto(lista, "BLT", auxPosStr, "");
+        
         //Apilo posicion para la etiqueta
         strcpy(itemPosicion.value, auxPosStr);
         meterEnPila(&pilaPosiciones, &itemPosicion);
+        
         auxPos = insertarTerceto(lista, "+", "@acum", itemSimbolo.nombre);
         formatearPosicion(auxPos, auxPosStr);
         insertarTerceto(lista, "=", "@acum", auxPosStr);
-        //Desapilo posicion
+        
+        //Desapilo posicion para la etiqueta
         sacarDePila(&pilaPosiciones, &itemPosicion);
-        printf("POSICION: %s\n", itemPosicion.value);
+        
         insertarTerceto(lista, "ETIQ", itemPosicion.value, "");
         auxPos = insertarTerceto(lista, "+", "@cont", "_1");
         formatearPosicion(auxPos, auxPosStr);
