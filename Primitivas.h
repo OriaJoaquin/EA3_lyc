@@ -19,7 +19,6 @@ typedef t_nodoTerceto *t_listaTercetos;
 typedef struct tagStackItem
 {
     char value[30];
-    struct tagSExpression *estructura;
 } StackItem;
 
 typedef struct s_nodo_pila
@@ -75,9 +74,12 @@ int verPrimero(const t_cola *, QueueItem *);
 void vaciarCola(t_cola *);
 void cargarItemSimboloEntero(QueueItem *, char *);
 void cargarItemSimboloCadena(QueueItem *, char *);
+void cargarItemSimboloVariable(QueueItem *, char *, char *);
 void cargarItemSimboloVariableConValor(QueueItem *, char *, char *, char *);
 
 void formatearPosicion(int, char *);
+char *obtenerPosicion(char *);
+char *transformarPosicionEnAux(char *);
 
 extern int posicionTerceto;
 extern int contadorCadena;

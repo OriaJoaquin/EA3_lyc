@@ -17,7 +17,6 @@ void escribirCabeceraCodeInit(FILE *);
 void escribirVariables(FILE *, t_cola *);
 void escribirCodigo(FILE *, t_listaTercetos *);
 void escribirFinal(FILE *);
-//void imprimirArbolInOrden(SExpression *ast);
 
 extern int contadorAux;
 #endif // __ASSEMBLER_H__

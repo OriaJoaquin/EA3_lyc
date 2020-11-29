@@ -14,13 +14,12 @@
   t_cola colaSimbolos;
   QueueItem itemSimbolo;
 
-  t_pila pilaValores;
+  t_pila pilaPosiciones;
 
-  StackItem itemLista;
+  StackItem itemPosicion;
 
   char nameID[30];
 
-  int contadorValores = 0;
   int cantElementos = 0;
   int auxPos;
 
@@ -102,51 +101,84 @@
   op_read:
     READ ID {
       printf("\tREGLA 4: {READ ID} es op_read\n");
-      $$ = insertarTerceto(lista, $1, $2, "");
+      
+      //Cargo simbolo ID
+      cargarItemSimboloVariable(&itemSimbolo, $2, "Entero");
+      acolar(&colaSimbolos, &itemSimbolo);
+      strcpy(nameID, itemSimbolo.nombre);
+      
+      $$ = insertarTerceto(lista, $1, itemSimbolo.nombre, "");
     };
 
   op_asig:
     ID ASIG op_cola {
       printf("\tREGLA 5: {ID ASIG COLA} es op_asig\n");
-      $$ = insertarTerceto(lista, "=", $1, "@acum"); 
+
+      //Cargo simbolo ID
+      cargarItemSimboloVariable(&itemSimbolo, $1, "Entero");
+      acolar(&colaSimbolos, &itemSimbolo);
+      
+      $$ = insertarTerceto(lista, "=", itemSimbolo.nombre, "@acum"); 
     };
 
   op_cola:
     COLA PARA ID PYC CORCA {
+      //Cargar tabla simbolos 1
+      cargarItemSimboloEntero(&itemSimbolo, "1");//1 para la comparación con la cantidad pedida de elementos
+      acolar(&colaSimbolos, &itemSimbolo);  
       //Validacion ID > 1
-      auxPos = insertarTerceto(lista, "CMP", $3, "1");
+      auxPos = insertarTerceto(lista, "CMP", nameID, itemSimbolo.nombre);
       formatearPosicion(auxPos + 4, auxPosStr);
       insertarTerceto(lista, "BGE", auxPosStr, "");
-      strcpy(error, "\"El valor debe ser >=1\"");
-      insertarTerceto(lista, "WRITE", error, "");
-      insertarTerceto(lista, "JMP", "fin", "");
+      //Apilo posicion para la etiqueta
+      strcpy(itemPosicion.value, auxPosStr);
+      meterEnPila(&pilaPosiciones, &itemPosicion);
 
-      cargarItemSimboloCadena(&itemSimbolo, error);
+      //Cargo simbolo cadena mensaje de error
+      cargarItemSimboloCadena(&itemSimbolo, "\"El valor debe ser >=1\"");
       acolar(&colaSimbolos, &itemSimbolo);
 
+      insertarTerceto(lista, "WRITE", itemSimbolo.nombre, "");
+      insertarTerceto(lista, "EXIT", "", "");
+
+      //Desapilo posicion
+      sacarDePila(&pilaPosiciones, &itemPosicion);
+      printf("POSICION: %s\n", itemPosicion.value);
+      insertarTerceto(lista, "ETIQ", itemPosicion.value, "");
       //Calculo saltos
-      auxPos =insertarTerceto(lista, "-","@cantElementos", $3);
+      auxPos =insertarTerceto(lista, "-","@cantElementos", nameID);
       formatearPosicion(auxPos, auxPosStr);
       insertarTerceto(lista,"=","@cantSaltos",auxPosStr);
 
       //Validacion ID < CantidadElementos
-      auxPos = insertarTerceto(lista, "CMP", $3, "@cantElementos");
+      auxPos = insertarTerceto(lista, "CMP", nameID, "@cantElementos");
       formatearPosicion(auxPos + 4, auxPosStr);
       insertarTerceto(lista, "BLE", auxPosStr, "");
-      strcpy(error, "\"La lista tiene menos elementos que el indicado\"");
-      insertarTerceto(lista, "WRITE", error, "");
-      insertarTerceto(lista, "JMP", "fin", "");
+      //Apilo posicion para la etiqueta
+      strcpy(itemPosicion.value, auxPosStr);
+      meterEnPila(&pilaPosiciones, &itemPosicion);
 
-      cargarItemSimboloCadena(&itemSimbolo, error);
+      //Cargo simbolo cadena mensaje de error
+      cargarItemSimboloCadena(&itemSimbolo, "\"La lista tiene menos elementos que el indicado\"");
       acolar(&colaSimbolos, &itemSimbolo);
 
+      insertarTerceto(lista, "WRITE", itemSimbolo.nombre, "");
+      insertarTerceto(lista, "EXIT", "", "");
+
+
+
+      //Desapilo posicion
+      sacarDePila(&pilaPosiciones, &itemPosicion);
+      printf("POSICION: %s\n", itemPosicion.value);
+      insertarTerceto(lista, "ETIQ", itemPosicion.value, "");
       //Seteo acumuladores y contadores
-      insertarTerceto(lista, "=", "@acum", "0");
-      insertarTerceto(lista, "=", "@cont", "0");
+      //insertarTerceto(lista, "=", "@acum", "_0");
+     //insertarTerceto(lista, "=", "@cont", "_0");
     } lista CORCC PARC {
 
       printf("\tREGLA 6: {COLA PARA ID PYC CORCA lista CORCC PARC} es op_cola\n");
-      //Cargar tabla simbolos
+      
+      //Cargar tabla simbolos 
       cargarItemSimboloVariableConValor(&itemSimbolo, "@cont", "0", "Entero");
       acolar(&colaSimbolos, &itemSimbolo);
 
@@ -171,46 +203,65 @@
       printf("\tREGLA 8: {CONSENT} es lista\n");
       cantElementos++;
 
+      //Cargar tabla simbolos
+      cargarItemSimboloEntero(&itemSimbolo, $1);
+      acolar(&colaSimbolos, &itemSimbolo); 
+
       //Tercetos
         auxPos = insertarTerceto(lista, "CMP", "@cont", "@cantSaltos");
         formatearPosicion(auxPos + 4, auxPosStr);
-        insertarTerceto(lista, "BLE", auxPosStr, "");
-        auxPos = insertarTerceto(lista, "+", "@acum", $1);
+        insertarTerceto(lista, "BLT", auxPosStr, "");
+        //Apilo posicion para la etiqueta
+        strcpy(itemPosicion.value, auxPosStr);
+        meterEnPila(&pilaPosiciones, &itemPosicion);
+        auxPos = insertarTerceto(lista, "+", "@acum", itemSimbolo.nombre);
         formatearPosicion(auxPos, auxPosStr);
         insertarTerceto(lista, "=", "@acum", auxPosStr);
-        auxPos = insertarTerceto(lista, "+", "@cont", "1");
+        //Desapilo posicion
+        sacarDePila(&pilaPosiciones, &itemPosicion);
+        printf("POSICION: %s\n", itemPosicion.value);
+        insertarTerceto(lista, "ETIQ", itemPosicion.value, "");
+        auxPos = insertarTerceto(lista, "+", "@cont", "_1");
         formatearPosicion(auxPos, auxPosStr);
         insertarTerceto(lista, "=", "@cont", auxPosStr);
-
-      //Cargar tabla simbolos
-      cargarItemSimboloEntero(&itemSimbolo, $1);
-      acolar(&colaSimbolos, &itemSimbolo);  
     }|
     lista COMA CONSENT {
       printf("\tREGLA 9: {lista CONSENT} es lista\n");
 
       cantElementos++;
+      //Cargar tabla simbolos
+      cargarItemSimboloEntero(&itemSimbolo, $3);
+      acolar(&colaSimbolos, &itemSimbolo);
 
       //Tercetos
         auxPos = insertarTerceto(lista, "CMP", "@cont", "@cantSaltos");
         formatearPosicion(auxPos + 4, auxPosStr);
-        insertarTerceto(lista, "BLE", auxPosStr, "");
-        auxPos = insertarTerceto(lista, "+", "@acum", $3);
+        insertarTerceto(lista, "BLT", auxPosStr, "");
+        //Apilo posicion para la etiqueta
+        strcpy(itemPosicion.value, auxPosStr);
+        meterEnPila(&pilaPosiciones, &itemPosicion);
+        auxPos = insertarTerceto(lista, "+", "@acum", itemSimbolo.nombre);
         formatearPosicion(auxPos, auxPosStr);
         insertarTerceto(lista, "=", "@acum", auxPosStr);
-        auxPos = insertarTerceto(lista, "+", "@cont", "1");
+        //Desapilo posicion
+        sacarDePila(&pilaPosiciones, &itemPosicion);
+        printf("POSICION: %s\n", itemPosicion.value);
+        insertarTerceto(lista, "ETIQ", itemPosicion.value, "");
+        auxPos = insertarTerceto(lista, "+", "@cont", "_1");
         formatearPosicion(auxPos, auxPosStr);
         insertarTerceto(lista, "=", "@cont", auxPosStr);
-
-      //Cargar tabla simbolos
-      cargarItemSimboloEntero(&itemSimbolo, $3);
-      acolar(&colaSimbolos, &itemSimbolo);  
     };
   
   op_write:
     WRITE CONSCAD {
       printf("\tREGLA 10: {WRITE CONSCAD} es op_write\n");
-      $$ = insertarTerceto(lista, $1, $2, "");
+
+      //Cargar tabla simbolos
+      cargarItemSimboloCadena(&itemSimbolo, $2);
+      acolar(&colaSimbolos, &itemSimbolo);  
+      
+      $$ = insertarTerceto(lista, $1, itemSimbolo.nombre, "");
+
     } |
     WRITE ID {
       printf("\t{REGLA 11: WRITE ID} es op_write\n");
@@ -231,6 +282,7 @@ int main(int argc, char *argv[])
   else
   {
     crearCola(&colaSimbolos);
+    crearPila(&pilaPosiciones);
     crearListaTercetos(&lista);
 
     SExpression *expression;
@@ -242,7 +294,7 @@ int main(int argc, char *argv[])
 
     printf("\nTERCETOS GENERADOS: \n\n");
 
-    imprimirListaTercetos(&lista);
+    //imprimirListaTercetos(&lista);
   }
 
   fclose(yyin);

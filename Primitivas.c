@@ -192,6 +192,7 @@ void imprimirListaTercetos(t_listaTercetos *pTerceto)
     {
         nuevoNodo = *pTerceto;
         printf("[%d](%s,%s,%s)\n", nuevoNodo->info.posicion, nuevoNodo->info.pos1, nuevoNodo->info.pos2, nuevoNodo->info.pos3);
+
         pTerceto = &(*pTerceto)->psig;
         free(nuevoNodo);
     }
@@ -208,6 +209,37 @@ void formatearPosicion(int pos, char *posStr)
 
     strcpy(posStr, aux);
 }
+
+char *obtenerPosicion(char *posStr)
+{
+    char auxNumero[6];
+    int cont = 0;
+
+    posStr++;
+    while (*posStr != ']')
+    {
+        auxNumero[cont] = *posStr;
+        posStr++;
+        cont++;
+    }
+    auxNumero[cont] = '\0';
+
+    strcpy(posStr, auxNumero);
+
+    return posStr;
+}
+
+char *transformarPosicionEnAux(char *valor)
+{
+    char aux[30];
+    if (*valor == '[')
+    {
+        strcpy(aux, "@aux");
+        //strcat(aux, obtenerPosicion(valor));
+        strcpy(valor, aux);
+    }
+    return valor;
+};
 
 void cargarItemSimboloEntero(QueueItem *item, char *value)
 {
@@ -238,9 +270,20 @@ void cargarItemSimboloCadena(QueueItem *item, char *value)
 
 void cargarItemSimboloVariableConValor(QueueItem *item, char *nombre, char *value, char *tipo)
 {
+    char cadenaAuxiliar[50];
     item->longitud = 0;
 
     strcpy(item->nombre, nombre);
     strcpy(item->tipo, tipo);
     strcpy(item->valor, value);
+}
+
+void cargarItemSimboloVariable(QueueItem *item, char *nombre, char *tipo)
+{
+    char cadenaAuxiliar[50];
+
+    item->longitud = 0;
+    strcpy(item->nombre, nombre);
+    strcpy(item->tipo, tipo);
+    strcpy(item->valor, "\0");
 }
