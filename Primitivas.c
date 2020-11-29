@@ -235,11 +235,21 @@ char *transformarPosicionEnAux(char *valor)
     if (*valor == '[')
     {
         strcpy(aux, "@aux");
-        //strcat(aux, obtenerPosicion(valor));
+        strcat(aux, obtenerPosicion(valor));
         strcpy(valor, aux);
     }
     return valor;
 };
+
+char *crearNombreVariableAux(char *nombre, int pos)
+{
+    char aux[30];
+    itoa(pos, aux, 10);
+    strcpy(nombre, "@aux");
+    strcat(nombre, aux);
+
+    return nombre;
+}
 
 void cargarItemSimboloEntero(QueueItem *item, char *value)
 {

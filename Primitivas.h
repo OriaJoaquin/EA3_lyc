@@ -80,6 +80,7 @@ void cargarItemSimboloVariableConValor(QueueItem *, char *, char *, char *);
 void formatearPosicion(int, char *);
 char *obtenerPosicion(char *);
 char *transformarPosicionEnAux(char *);
+char *crearNombreVariableAux(char *, int);
 
 extern int posicionTerceto;
 extern int contadorCadena;

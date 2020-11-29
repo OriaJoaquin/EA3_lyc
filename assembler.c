@@ -115,7 +115,7 @@ void escribirCodigo(FILE *pArchivo, t_listaTercetos *lista)
 
         //printf("[%d](%s,%s,%s)\n", nuevoNodo->info.posicion, nuevoNodo->info.pos1, nuevoNodo->info.pos2, nuevoNodo->info.pos3);
 
-        //printf("NODO: %s\n", nuevoNodo->info.pos1);
+        printf("NODO: %s\n", nuevoNodo->info.pos1);
 
         if (!strcmp(nuevoNodo->info.pos1, "READ"))
         {
@@ -123,10 +123,16 @@ void escribirCodigo(FILE *pArchivo, t_listaTercetos *lista)
             fprintf(pArchivo, "GetInteger %s\n", nuevoNodo->info.pos2);
             fprintf(pArchivo, "newLine 1\n");
         }
-        else if (!strcmp(nuevoNodo->info.pos1, "WRITE"))
+        else if (!strcmp(nuevoNodo->info.pos1, "WRITECAD"))
         {
-            fprintf(pArchivo, "; ESCRIBIR\n");
+            fprintf(pArchivo, "; ESCRIBIR CAD\n");
             fprintf(pArchivo, "displayString %s\n", nuevoNodo->info.pos2);
+            fprintf(pArchivo, "newLine 1\n");
+        }
+        else if (!strcmp(nuevoNodo->info.pos1, "WRITEID"))
+        {
+            fprintf(pArchivo, "; ESCRIBIR ID\n");
+            fprintf(pArchivo, "displayInteger %s\n", nuevoNodo->info.pos2);
             fprintf(pArchivo, "newLine 1\n");
         }
         else if (!strcmp(nuevoNodo->info.pos1, "CMP"))
@@ -166,7 +172,7 @@ void escribirCodigo(FILE *pArchivo, t_listaTercetos *lista)
             fprintf(pArchivo, "FLD %s\n", nuevoNodo->info.pos2);
             fprintf(pArchivo, "FLD %s\n", nuevoNodo->info.pos3);
             fprintf(pArchivo, "FADD \n");
-            fprintf(pArchivo, "FSTP @aux\n", nuevoNodo->info.posicion);
+            fprintf(pArchivo, "FSTP @aux%d\n", nuevoNodo->info.posicion);
             fprintf(pArchivo, "FFREE\n");
         }
         else if (!strcmp(nuevoNodo->info.pos1, "-"))
@@ -177,7 +183,7 @@ void escribirCodigo(FILE *pArchivo, t_listaTercetos *lista)
             fprintf(pArchivo, "FLD %s\n", nuevoNodo->info.pos2);
             fprintf(pArchivo, "FLD %s\n", nuevoNodo->info.pos3);
             fprintf(pArchivo, "FSUB \n");
-            fprintf(pArchivo, "FSTP @aux\n", nuevoNodo->info.posicion);
+            fprintf(pArchivo, "FSTP @aux%d\n", nuevoNodo->info.posicion);
             fprintf(pArchivo, "FFREE\n");
         }
         else if (!strcmp(nuevoNodo->info.pos1, "="))

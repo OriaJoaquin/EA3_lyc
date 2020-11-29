@@ -136,17 +136,13 @@
       cargarItemSimboloCadena(&itemSimbolo, "\"El valor debe ser >=1\"");
       acolar(&colaSimbolos, &itemSimbolo);
 
-      insertarTerceto(lista, "WRITE", itemSimbolo.nombre, "");
+      insertarTerceto(lista, "WRITECAD", itemSimbolo.nombre, "");
       insertarTerceto(lista, "EXIT", "", "");
 
       //Desapilo posicion
       sacarDePila(&pilaPosiciones, &itemPosicion);
       printf("POSICION: %s\n", itemPosicion.value);
       insertarTerceto(lista, "ETIQ", itemPosicion.value, "");
-      //Calculo saltos
-      auxPos =insertarTerceto(lista, "-","@cantElementos", nameID);
-      formatearPosicion(auxPos, auxPosStr);
-      insertarTerceto(lista,"=","@cantSaltos",auxPosStr);
 
       //Validacion ID < CantidadElementos
       auxPos = insertarTerceto(lista, "CMP", nameID, "@cantElementos");
@@ -160,18 +156,22 @@
       cargarItemSimboloCadena(&itemSimbolo, "\"La lista tiene menos elementos que el indicado\"");
       acolar(&colaSimbolos, &itemSimbolo);
 
-      insertarTerceto(lista, "WRITE", itemSimbolo.nombre, "");
+      insertarTerceto(lista, "WRITECAD", itemSimbolo.nombre, "");
       insertarTerceto(lista, "EXIT", "", "");
-
-
 
       //Desapilo posicion
       sacarDePila(&pilaPosiciones, &itemPosicion);
       printf("POSICION: %s\n", itemPosicion.value);
       insertarTerceto(lista, "ETIQ", itemPosicion.value, "");
-      //Seteo acumuladores y contadores
-      //insertarTerceto(lista, "=", "@acum", "_0");
-     //insertarTerceto(lista, "=", "@cont", "_0");
+     
+      //Calculo saltos
+      auxPos =insertarTerceto(lista, "-","@cantElementos", nameID);
+      formatearPosicion(auxPos, auxPosStr);
+      insertarTerceto(lista,"=","@cantSaltos",auxPosStr);
+
+      //Cargo simbolo @aux
+      cargarItemSimboloVariable(&itemSimbolo, crearNombreVariableAux(itemSimbolo.nombre, auxPos), "Entero");
+      acolar(&colaSimbolos, &itemSimbolo);
     } lista CORCC PARC {
 
       printf("\tREGLA 6: {COLA PARA ID PYC CORCA lista CORCC PARC} es op_cola\n");
@@ -217,6 +217,10 @@
         auxPos = insertarTerceto(lista, "+", "@acum", itemSimbolo.nombre);
         formatearPosicion(auxPos, auxPosStr);
         insertarTerceto(lista, "=", "@acum", auxPosStr);
+
+        //Cargo simbolo @aux
+        cargarItemSimboloVariable(&itemSimbolo, crearNombreVariableAux(itemSimbolo.nombre, auxPos), "Entero");
+        acolar(&colaSimbolos, &itemSimbolo);
         
         //Desapilo posicion para la etiqueta
         sacarDePila(&pilaPosiciones, &itemPosicion);
@@ -225,6 +229,10 @@
         auxPos = insertarTerceto(lista, "+", "@cont", "_1");
         formatearPosicion(auxPos, auxPosStr);
         insertarTerceto(lista, "=", "@cont", auxPosStr);
+
+        //Cargo simbolo @aux
+        cargarItemSimboloVariable(&itemSimbolo, crearNombreVariableAux(itemSimbolo.nombre, auxPos), "Entero");
+        acolar(&colaSimbolos, &itemSimbolo);
     }|
     lista COMA CONSENT {
       printf("\tREGLA 9: {lista CONSENT} es lista\n");
@@ -247,6 +255,10 @@
         formatearPosicion(auxPos, auxPosStr);
         insertarTerceto(lista, "=", "@acum", auxPosStr);
         
+        //Cargo simbolo @aux
+        cargarItemSimboloVariable(&itemSimbolo, crearNombreVariableAux(itemSimbolo.nombre, auxPos), "Entero");
+        acolar(&colaSimbolos, &itemSimbolo);
+
         //Desapilo posicion para la etiqueta
         sacarDePila(&pilaPosiciones, &itemPosicion);
         
@@ -254,6 +266,10 @@
         auxPos = insertarTerceto(lista, "+", "@cont", "_1");
         formatearPosicion(auxPos, auxPosStr);
         insertarTerceto(lista, "=", "@cont", auxPosStr);
+
+        //Cargo simbolo @aux
+        cargarItemSimboloVariable(&itemSimbolo, crearNombreVariableAux(itemSimbolo.nombre, auxPos), "Entero");
+        acolar(&colaSimbolos, &itemSimbolo);
     };
   
   op_write:
@@ -264,12 +280,12 @@
       cargarItemSimboloCadena(&itemSimbolo, $2);
       acolar(&colaSimbolos, &itemSimbolo);  
       
-      $$ = insertarTerceto(lista, $1, itemSimbolo.nombre, "");
+      $$ = insertarTerceto(lista, "WRITECAD", itemSimbolo.nombre, "");
 
     } |
     WRITE ID {
       printf("\t{REGLA 11: WRITE ID} es op_write\n");
-      $$ = insertarTerceto(lista, $1, $2, "");
+      $$ = insertarTerceto(lista, "WRITEID", $2, "");
     };
 
 %%
