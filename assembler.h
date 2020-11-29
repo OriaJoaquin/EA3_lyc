@@ -12,10 +12,11 @@
 
 void generarASM(t_listaTercetos *, t_cola *);
 void crearArchivo(FILE **);
+void crearArchivoIntermedia(FILE **);
 void escribirCabecera(FILE *);
 void escribirCabeceraCodeInit(FILE *);
 void escribirVariables(FILE *, t_cola *);
-void escribirCodigo(FILE *, t_listaTercetos *);
+void escribirCodigo(FILE *, FILE *, t_listaTercetos *);
 void escribirFinal(FILE *);
 
 extern int contadorAux;

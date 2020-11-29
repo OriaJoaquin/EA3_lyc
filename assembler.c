@@ -15,11 +15,13 @@ StackItem item;
 void generarASM(t_listaTercetos *lista, t_cola *colaSimbolos)
 {
     FILE *pArchivo;
+    FILE *pArchivoIntermedia;
 
     crearPila(&pilaIdDecisiones);
     crearPila(&pilaIdMientras);
 
     crearArchivo(&pArchivo);
+    crearArchivoIntermedia(&pArchivoIntermedia);
 
     escribirCabecera(pArchivo);
 
@@ -27,11 +29,12 @@ void generarASM(t_listaTercetos *lista, t_cola *colaSimbolos)
 
     escribirCabeceraCodeInit(pArchivo);
 
-    escribirCodigo(pArchivo, lista);
+    escribirCodigo(pArchivo, pArchivoIntermedia, lista);
 
     escribirFinal(pArchivo);
 
     fclose(pArchivo);
+    fclose(pArchivoIntermedia);
 
     printf("\n///////////// Archivo de assembler generado. /////////////\n");
 }
@@ -39,6 +42,17 @@ void generarASM(t_listaTercetos *lista, t_cola *colaSimbolos)
 void crearArchivo(FILE **pArchivo)
 {
     *pArchivo = fopen("Final.asm", "wb");
+
+    if (*pArchivo == NULL)
+    {
+        printf("\nNo se pudo crear el archivo de assembler.\n");
+        exit(1);
+    }
+}
+
+void crearArchivoIntermedia(FILE **pArchivo)
+{
+    *pArchivo = fopen("intermedia.txt", "wb");
 
     if (*pArchivo == NULL)
     {
@@ -105,7 +119,7 @@ void escribirFinal(FILE *pArchivo)
     fprintf(pArchivo, "END START; final del archivo.\n");
 }
 
-void escribirCodigo(FILE *pArchivo, t_listaTercetos *lista)
+void escribirCodigo(FILE *pArchivo, FILE *pArchivoIntermdia, t_listaTercetos *lista)
 {
     t_nodoTerceto *nuevoNodo;
 
@@ -113,9 +127,10 @@ void escribirCodigo(FILE *pArchivo, t_listaTercetos *lista)
     {
         nuevoNodo = *lista;
 
-        //printf("[%d](%s,%s,%s)\n", nuevoNodo->info.posicion, nuevoNodo->info.pos1, nuevoNodo->info.pos2, nuevoNodo->info.pos3);
+        printf("[%d](%s,%s,%s)\n", nuevoNodo->info.posicion, nuevoNodo->info.pos1, nuevoNodo->info.pos2, nuevoNodo->info.pos3);
+        fprintf(pArchivoIntermdia, "[%d](%s,%s,%s)\n", nuevoNodo->info.posicion, nuevoNodo->info.pos1, nuevoNodo->info.pos2, nuevoNodo->info.pos3);
 
-        printf("NODO: %s\n", nuevoNodo->info.pos1);
+        //printf("NODO: %s\n", nuevoNodo->info.pos1);
 
         if (!strcmp(nuevoNodo->info.pos1, "READ"))
         {
@@ -188,8 +203,6 @@ void escribirCodigo(FILE *pArchivo, t_listaTercetos *lista)
         }
         else if (!strcmp(nuevoNodo->info.pos1, "="))
         {
-            //printf("ASIGNACION: %s\n", nuevoNodo->info.pos2);
-            //printf("ASIGNACION: %s\n", nuevoNodo->info.pos3);
             transformarPosicionEnAux(nuevoNodo->info.pos2);
             transformarPosicionEnAux(nuevoNodo->info.pos3);
             fprintf(pArchivo, "; ASIGNACION\n");

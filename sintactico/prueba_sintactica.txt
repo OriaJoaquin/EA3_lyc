@@ -1,4 +1,5 @@
-WRITE "Ingrese numero"
-READ id5
-resul = cola(id5;[10,20,30,40,5,4])
+WRITE "Ingrese un valor pivot mayor o igual a 1:"
+READ pivot
+resul = cola(pivot;[200,170,150,50,25])
+WRITE "El resultado es:"
 WRITE resul

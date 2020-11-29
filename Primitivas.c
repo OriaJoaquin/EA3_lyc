@@ -80,7 +80,7 @@ void crearCola(t_cola *pc)
 int acolar(t_cola *pc, const QueueItem *pd)
 {
     t_nodo *nue = (t_nodo *)malloc(sizeof(t_nodo));
-
+    int existe;
     if (!nue)
         return 0;
 

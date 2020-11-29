@@ -9,6 +9,8 @@
   int yylvan; //Variable reservada que interactua con el analizador lexico
   char* yyltext; //varible que devuelve flex
 
+  int auxInt;
+
   int yyerror(void);
 %}
 
@@ -28,7 +30,7 @@ READ    "READ"
 COLA    "cola"
 
 CONSENT   [-]?[0-9]+
-CONSCAD   ["].{1,30}["]
+CONSCAD   ["].{1,50}["]
 
 PARA      "("
 PARC      ")"
@@ -82,12 +84,23 @@ CORCC     "]"
             }
 
 {CONSENT}   {
+              auxInt = atoi(yytext); 
+              if(auxInt > 32767 || auxInt < 0)
+              { 
+                printf("La constante entera supera los limites.\n"); 
+                yyerror(); 
+              }
               yylval.value = strdup(yytext);
               printf("CONSENT: %s\n", yytext);
               return CONSENT;
             }
 
 {CONSCAD}   {
+              if(strlen(yytext) > 50)
+              { 
+                printf("La cadena supera el limite.\n"); 
+                yyerror();
+              }
               yylval.value = strdup(yytext);
               printf("CONSCAD: %s\n", yytext); 
               return CONSCAD;

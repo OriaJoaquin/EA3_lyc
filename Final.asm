@@ -7,35 +7,33 @@ include number.asm
 
 .DATA
 
-_cad0                         	db	"Ingrese numero",'$', 16 dup (?)
-id5                           	dd	?
+_cad0                         	db	"Ingrese un valor pivot mayor o igual a 1:",'$', 43 dup (?)
+pivot                         	dd	?
 _1                            	dd	1
 _cad1                         	db	"El valor debe ser >=1",'$', 23 dup (?)
 _cad2                         	db	"La lista tiene menos elementos que el indicado",'$', 48 dup (?)
 @aux13                        	dd	?
-_10                           	dd	10
+_200                          	dd	200
 @aux17                        	dd	?
 @aux20                        	dd	?
-_20                           	dd	20
+_170                          	dd	170
 @aux24                        	dd	?
 @aux27                        	dd	?
-_30                           	dd	30
+_150                          	dd	150
 @aux31                        	dd	?
 @aux34                        	dd	?
-_40                           	dd	40
+_50                           	dd	50
 @aux38                        	dd	?
 @aux41                        	dd	?
-_5                            	dd	5
+_25                           	dd	25
 @aux45                        	dd	?
 @aux48                        	dd	?
-_4                            	dd	4
-@aux52                        	dd	?
-@aux55                        	dd	?
 @cont                         	dd	0
 @acum                         	dd	0
 @cantSaltos                   	dd	0
-@cantElementos                	dd	6
+@cantElementos                	dd	5
 resul                         	dd	?
+_cad3                         	db	"El resultado es:",'$', 18 dup (?)
 
 .CODE
 START:
@@ -47,10 +45,10 @@ START:
 displayString _cad0
 newLine 1
 ; LEER
-GetInteger id5
+GetInteger pivot
 newLine 1
 ; COMPARACION
-FLD id5
+FLD pivot
 FCOMP _1
 FSTSW ax
 SAHF
@@ -62,7 +60,7 @@ newLine 1
 JMP FINAL
 _etiq7:
 ; COMPARACION
-FLD id5
+FLD pivot
 FCOMP @cantElementos
 FSTSW ax
 SAHF
@@ -75,7 +73,7 @@ JMP FINAL
 _etiq12:
 ; RESTA
 FLD @cantElementos
-FLD id5
+FLD pivot
 FSUB 
 FSTP @aux13
 FFREE
@@ -92,7 +90,7 @@ FFREE
 JB _etiq19
 ; SUMA
 FLD @acum
-FLD _10
+FLD _200
 FADD 
 FSTP @aux17
 FFREE
@@ -120,7 +118,7 @@ FFREE
 JB _etiq26
 ; SUMA
 FLD @acum
-FLD _20
+FLD _170
 FADD 
 FSTP @aux24
 FFREE
@@ -148,7 +146,7 @@ FFREE
 JB _etiq33
 ; SUMA
 FLD @acum
-FLD _30
+FLD _150
 FADD 
 FSTP @aux31
 FFREE
@@ -176,7 +174,7 @@ FFREE
 JB _etiq40
 ; SUMA
 FLD @acum
-FLD _40
+FLD _50
 FADD 
 FSTP @aux38
 FFREE
@@ -204,7 +202,7 @@ FFREE
 JB _etiq47
 ; SUMA
 FLD @acum
-FLD _5
+FLD _25
 FADD 
 FSTP @aux45
 FFREE
@@ -223,38 +221,13 @@ FFREE
 FLD @aux48
 FSTP @cont
 FFREE
-; COMPARACION
-FLD @cont
-FCOMP @cantSaltos
-FSTSW ax
-SAHF
-FFREE
-JB _etiq54
-; SUMA
-FLD @acum
-FLD _4
-FADD 
-FSTP @aux52
-FFREE
-; ASIGNACION
-FLD @aux52
-FSTP @acum
-FFREE
-_etiq54:
-; SUMA
-FLD @cont
-FLD _1
-FADD 
-FSTP @aux55
-FFREE
-; ASIGNACION
-FLD @aux55
-FSTP @cont
-FFREE
 ; ASIGNACION
 FLD @acum
 FSTP resul
 FFREE
+; ESCRIBIR CAD
+displayString _cad3
+newLine 1
 ; ESCRIBIR ID
 displayInteger resul
 newLine 1

@@ -72,6 +72,7 @@ int colaLlena(const t_cola *);
 int colaVacia(const t_cola *);
 int verPrimero(const t_cola *, QueueItem *);
 void vaciarCola(t_cola *);
+
 void cargarItemSimboloEntero(QueueItem *, char *);
 void cargarItemSimboloCadena(QueueItem *, char *);
 void cargarItemSimboloVariable(QueueItem *, char *, char *);
